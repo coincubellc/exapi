@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  api:
+    build: .
+    hostname: exapi
+    environment:
+      PORT: 9000
+      PYTHONUNBUFFERED: 1
+    restart: always
+    ports:
+      - "9000:9000"

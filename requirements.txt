@@ -1,0 +1,5 @@
+flask-restful
+flask-apispec
+flask-cors
+ccxt==1.18.964
+webargs==4.1.3
