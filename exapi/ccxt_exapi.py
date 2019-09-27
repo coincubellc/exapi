@@ -181,10 +181,11 @@ class CCXT(Exchange):
         balances = self._ccxt_query('fetch_balance')
 
         if balances:
-            del balances['info']
-            del balances['free']
-            del balances['used']
-            del balances['total']
+            # Using pop() instead of del balances['info'] since not all exchanges return these keys
+            balances.pop('info', None)
+            balances.pop('free', None)
+            balances.pop('used', None)
+            balances.pop('total', None)
             bals = {}
             for cur, bal in balances.items():
                 bals[cur] = {
@@ -352,10 +353,12 @@ class CCXT(Exchange):
         Response details: Function should return True if trading is enabled.
         and False if trading isn't enabled, and raise an exception if any error occurs during the testing process.
         """
-        price = self.get_orderbook(base='ETH', quote='BTC', limit=10, side='bids')['bids'][0][0]
+        # Get first supported symbol and use to test
+        symbol = self.exchange.symbols[0]
+        base, quote = symbol.split('/')
+        price = self.get_orderbook(base=base, quote=quote, limit=10, side='bids')['bids'][0][0]
         price = price * 0.7
 
-        symbol = 'ETH/BTC'
         self._ccxt_query('load_markets')
         price = self.exchange.price_to_precision(symbol, price)
         
@@ -367,6 +370,8 @@ class CCXT(Exchange):
             return True
         except ccxt.AuthenticationError:
             return False
+        except TypeError: # No balance available to trade
+            return True
         except ccxt.PermissionDenied:
             return False
         except ccxt.ExchangeError as e:
@@ -375,7 +380,7 @@ class CCXT(Exchange):
         
         if order_id is not None:
             log.debug(f'Deleting order {order_id}')
-            self.cancel(order_id, 'ETH', 'BTC')
+            self.cancel(order_id, base, quote)
 
         return True
 
