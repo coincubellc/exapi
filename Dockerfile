@@ -1,4 +1,4 @@
-FROM continuumio/anaconda3
+FROM continuumio/anaconda3:2019.03
 RUN apt-get update && apt-get install -y build-essential
 
 RUN conda install -c conda-forge requests
