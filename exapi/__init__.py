@@ -8,7 +8,7 @@ exs = {
     }
 
 exchanges = ['Binance', 'Bitfinex', 'Bitstamp', 'Bittrex',
-             'CoinbasePro', 'Coss', 'Kraken', 'Kucoin',
+             'CoinbasePro', 'Kraken', 'Kucoin',
              'Liquid', 'Poloniex']
 
 for ex_name in exchanges:
